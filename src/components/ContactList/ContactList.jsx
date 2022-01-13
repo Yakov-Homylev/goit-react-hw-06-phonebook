@@ -1,20 +1,22 @@
 import React from "react";
-import PropTypes from "prop-types";
 import ContactItem from "./ContactItem";
+import { useSelector } from "react-redux";
+import { getVisibleContacts } from "../../redux/contacts/contacts-selector";
 import { List, Notification } from "./ContactList.styled";
 
-export default function ContactList({ array, removeContact }) {
+export default function ContactList() {
+  const contacts = useSelector(getVisibleContacts);
+
   return (
     <List>
-      {array.length > 0 ? (
-        array.map((el) => {
+      {contacts.length > 0 ? (
+        contacts.map((el) => {
           return (
             <ContactItem
               key={el.id}
               id={el.id}
               name={el.name}
               number={el.number}
-              OnClick={removeContact}
             />
           );
         })
@@ -24,14 +26,3 @@ export default function ContactList({ array, removeContact }) {
     </List>
   );
 }
-
-ContactList.propTypes = {
-  array: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired,
-    })
-  ),
-  removeContact: PropTypes.func.isRequired,
-};

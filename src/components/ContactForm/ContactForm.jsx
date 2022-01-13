@@ -1,10 +1,36 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
 import { Form, InputName, Input, AddButoon } from "./ContactForm.styled";
+import { addContact } from "../../redux/contacts/contacts-actions";
 
-function ContactForm({ onSubmitForm }) {
+function ContactForm() {
+  const dispatch = useDispatch();
+  const contacts = useSelector((state) => state.contacts);
+
+  const addContacts = (e) => {
+    e.preventDefault();
+
+    const name = e.target.name.value;
+    const number = e.target.number.value;
+    const isNameInContacts = contacts.find((contact) => contact.name === name);
+    const isNumberInContacts = contacts.find(
+      (contact) => contact.number === number
+    );
+    if (isNameInContacts) {
+      alert("This name in contacts");
+      return;
+    }
+    if (isNumberInContacts) {
+      alert("This number in contacts");
+      return;
+    }
+
+    dispatch(addContact(name, number));
+    e.currentTarget.reset();
+  };
+
   return (
-    <Form onSubmit={onSubmitForm}>
+    <Form onSubmit={addContacts}>
       <InputName>
         Name
         <Input
@@ -32,7 +58,3 @@ function ContactForm({ onSubmitForm }) {
 }
 
 export default ContactForm;
-
-ContactForm.propTypes = {
-  onSubmitForm: PropTypes.func.isRequired,
-};
